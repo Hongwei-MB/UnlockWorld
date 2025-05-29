@@ -34,6 +34,7 @@ namespace UnlockWorld
         {
             this.components = new System.ComponentModel.Container();
             this.panelTop = new System.Windows.Forms.Panel();
+            this.chkToggleOnly = new System.Windows.Forms.CheckBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnClearLogs = new System.Windows.Forms.Button();
             this.btnFinderTool = new System.Windows.Forms.Button();
@@ -55,6 +56,7 @@ namespace UnlockWorld
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.chkToggleOnly);
             this.panelTop.Controls.Add(this.lblStatus);
             this.panelTop.Controls.Add(this.btnClearLogs);
             this.panelTop.Controls.Add(this.btnFinderTool);
@@ -63,6 +65,16 @@ namespace UnlockWorld
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(800, 60);
             this.panelTop.TabIndex = 0;
+            // 
+            // chkToggleOnly
+            // 
+            this.chkToggleOnly.AutoSize = true;
+            this.chkToggleOnly.Location = new System.Drawing.Point(450, 22);
+            this.chkToggleOnly.Name = "chkToggleOnly";
+            this.chkToggleOnly.Size = new System.Drawing.Size(174, 19);
+            this.chkToggleOnly.TabIndex = 3;
+            this.chkToggleOnly.Text = "仅切换复选框状态";
+            this.chkToggleOnly.UseVisualStyleBackColor = true;
             // 
             // lblStatus
             // 
@@ -203,13 +215,14 @@ namespace UnlockWorld
 
         private Panel panelTop;
         private Button btnFinderTool;
-        private SplitContainer splitContainer;
         private Button btnClearLogs;
+        private Label lblStatus;
+        private CheckBox chkToggleOnly;
+        private SplitContainer splitContainer;
+        private TextBox txtElementDetails;
         private Label lblElementDetails;
         private RichTextBox logTextBox;
         private Label lblLogs;
-        private TextBox txtElementDetails;
-        private Label lblStatus;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolTip toolTip;

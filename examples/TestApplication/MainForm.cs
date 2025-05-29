@@ -6,6 +6,11 @@ namespace TestApplication
 {
     public partial class MainForm : Form
     {
+        // Track our checkboxes for testing purposes
+        private CheckBox? _disabledCheckbox;
+        private CheckBox? _disabledCheckedCheckbox;
+        private CheckBox? _disabledReadOnlyCheckbox;
+        
         public MainForm()
         {
             InitializeComponent();
@@ -16,7 +21,7 @@ namespace TestApplication
         {
             // Setup form properties
             Text = "Test Application - Disabled UI Elements";
-            Size = new Size(600, 400);
+            Size = new Size(600, 500);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -27,6 +32,43 @@ namespace TestApplication
             CreateMenus();
             CreateCheckboxes();
             CreateDropdowns();
+            
+            // Add a status label at the bottom
+            var statusLabel = new Label
+            {
+                Text = "Use UnlockWorld to enable these disabled controls",
+                Location = new Point(30, 420),
+                AutoSize = true,
+                Font = new Font(Font.FontFamily, 10, FontStyle.Bold)
+            };
+            Controls.Add(statusLabel);
+            
+            // Add checkbox state test button
+            var btnTestCheckbox = new Button
+            {
+                Text = "Test Checkbox State",
+                Location = new Point(30, 380),
+                Size = new Size(150, 30),
+                Enabled = true
+            };
+            btnTestCheckbox.Click += TestCheckboxState_Click;
+            Controls.Add(btnTestCheckbox);
+        }
+
+        private void TestCheckboxState_Click(object? sender, EventArgs e)
+        {
+            string status = "Checkbox Status:\n\n";
+            
+            if (_disabledCheckbox != null)
+                status += $"Regular Checkbox - Enabled: {_disabledCheckbox.Enabled}, Checked: {_disabledCheckbox.Checked}\n";
+                
+            if (_disabledCheckedCheckbox != null)
+                status += $"Pre-checked Checkbox - Enabled: {_disabledCheckedCheckbox.Enabled}, Checked: {_disabledCheckedCheckbox.Checked}\n";
+                
+            if (_disabledReadOnlyCheckbox != null)
+                status += $"'Read-only' Checkbox - Enabled: {_disabledReadOnlyCheckbox.Enabled}, Checked: {_disabledReadOnlyCheckbox.Checked}\n";
+                
+            MessageBox.Show(status, "Checkbox State Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void CreateButtons()
@@ -127,15 +169,48 @@ namespace TestApplication
             };
             Controls.Add(chkEnabled);
 
-            // Disabled checkbox
-            var chkDisabled = new CheckBox
+            // Disabled checkbox (unchecked)
+            _disabledCheckbox = new CheckBox
             {
                 Text = "Disabled Checkbox",
                 Location = new Point(30, 150),
                 AutoSize = true,
-                Enabled = false
+                Enabled = false,
+                Checked = false
             };
-            Controls.Add(chkDisabled);
+            Controls.Add(_disabledCheckbox);
+            
+            // Disabled checkbox (pre-checked)
+            _disabledCheckedCheckbox = new CheckBox
+            {
+                Text = "Disabled Checkbox (Pre-checked)",
+                Location = new Point(30, 180),
+                AutoSize = true,
+                Enabled = false,
+                Checked = true
+            };
+            Controls.Add(_disabledCheckedCheckbox);
+            
+            // Simulating a read-only checkbox using disabled state
+            _disabledReadOnlyCheckbox = new CheckBox
+            {
+                Text = "Disabled 'Read-Only' Checkbox",
+                Location = new Point(30, 210),
+                AutoSize = true,
+                Enabled = false,
+                Checked = true
+            };
+            Controls.Add(_disabledReadOnlyCheckbox);
+            
+            // Add helper label
+            var helperLabel = new Label
+            {
+                Text = "Try enabling these checkboxes with UnlockWorld",
+                Location = new Point(30, 240),
+                AutoSize = true,
+                ForeColor = Color.Blue
+            };
+            Controls.Add(helperLabel);
         }
 
         private void CreateDropdowns()

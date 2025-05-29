@@ -25,7 +25,12 @@ namespace UnlockWorld
             btnFinderTool.MouseMove += BtnFinderTool_MouseMove;
             btnFinderTool.MouseUp += BtnFinderTool_MouseUp;
             btnClearLogs.Click += BtnClearLogs_Click;
-        }        private void Form1_Load(object? sender, EventArgs e)
+            
+            // Set tooltip for the toggle checkbox
+            toolTip.SetToolTip(chkToggleOnly, "启用此选项将只切换复选框的状态，而不会启用禁用的控件");
+        }
+
+        private void Form1_Load(object? sender, EventArgs e)
         {
             // Initialize logging
             _logHelper = new LogHelper(logTextBox);
@@ -120,6 +125,27 @@ namespace UnlockWorld
                 txtElementDetails.Text = details;
                 _logHelper.Log("成功找到UI元素");
 
+                // Check if it's a checkbox and we only want to toggle its state
+                bool isCheckbox = _currentElement.Patterns.Toggle.IsSupported;
+                bool toggleOnlyMode = chkToggleOnly.Checked;                if (isCheckbox && toggleOnlyMode)
+                {
+                    _logHelper.Log("检测到复选框，正在切换状态而非启用...");
+                    
+                    bool toggleSuccess = _elementEnabler.ToggleCheckboxState(_currentElement);
+                    if (toggleSuccess)
+                    {
+                        _logHelper.LogSuccess("成功切换复选框状态！");
+                        UpdateStatus("成功切换复选框状态", Color.Green);
+                    }
+                    else
+                    {
+                        _logHelper.LogError("无法切换复选框状态");
+                        UpdateStatus("无法切换复选框状态", Color.Red);
+                    }
+                    
+                    return;
+                }
+
                 // Check if the element is already enabled
                 bool isEnabled = _currentElement.Properties.IsEnabled.ValueOrDefault;
                 
@@ -149,7 +175,9 @@ namespace UnlockWorld
                 _logHelper.LogError($"操作过程中发生错误: {ex.Message}");
                 UpdateStatus("发生错误", Color.Red);
             }
-        }        private void BtnClearLogs_Click(object? sender, EventArgs e)
+        }
+
+        private void BtnClearLogs_Click(object? sender, EventArgs e)
         {
             _logHelper?.Clear();
             _logHelper?.Log("日志已清除");
