@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace UnlockWorld
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -37,6 +37,7 @@ namespace UnlockWorld
             chkToggleOnly = new CheckBox();
             lblStatus = new Label();
             btnClearLogs = new Button();
+            btnFinderTool = new Button();
             splitContainer = new SplitContainer();
             txtElementDetails = new TextBox();
             lblElementDetails = new Label();
@@ -45,7 +46,7 @@ namespace UnlockWorld
             statusStrip = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolTip = new ToolTip(components);
-            btnFinderTool = new Button();
+            button1 = new Button();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
@@ -56,6 +57,7 @@ namespace UnlockWorld
             // 
             // panelTop
             // 
+            panelTop.Controls.Add(button1);
             panelTop.Controls.Add(chkToggleOnly);
             panelTop.Controls.Add(lblStatus);
             panelTop.Controls.Add(btnClearLogs);
@@ -69,30 +71,42 @@ namespace UnlockWorld
             // chkToggleOnly
             // 
             chkToggleOnly.AutoSize = true;
-            chkToggleOnly.Location = new Point(450, 22);
+            chkToggleOnly.Location = new Point(12, 19);
             chkToggleOnly.Name = "chkToggleOnly";
-            chkToggleOnly.Size = new Size(126, 19);
+            chkToggleOnly.Size = new Size(145, 19);
             chkToggleOnly.TabIndex = 3;
-            chkToggleOnly.Text = "仅切换复选框状态";
+            chkToggleOnly.Text = "Toggle Checkbox Only";
             chkToggleOnly.UseVisualStyleBackColor = true;
             // 
             // lblStatus
             // 
             lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(274, 22);
+            lblStatus.Location = new Point(189, 23);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(57, 15);
+            lblStatus.Size = new Size(39, 15);
             lblStatus.TabIndex = 2;
-            lblStatus.Text = "准备就绪";
+            lblStatus.Text = "Ready";
             // 
             // btnClearLogs
             // 
-            btnClearLogs.Location = new Point(143, 15);
+            btnClearLogs.Location = new Point(663, 15);
             btnClearLogs.Name = "btnClearLogs";
             btnClearLogs.Size = new Size(125, 30);
             btnClearLogs.TabIndex = 1;
-            btnClearLogs.Text = "清除日志";
+            btnClearLogs.Text = "Clear Logs";
             btnClearLogs.UseVisualStyleBackColor = true;
+            btnClearLogs.Click += btnClearLogs_Click;
+            // 
+            // btnFinderTool
+            // 
+            btnFinderTool.Location = new Point(504, 15);
+            btnFinderTool.Name = "btnFinderTool";
+            btnFinderTool.Size = new Size(125, 30);
+            btnFinderTool.TabIndex = 0;
+            btnFinderTool.Text = "Element Finder";
+            btnFinderTool.UseVisualStyleBackColor = true;
+            btnFinderTool.MouseDown += btnFinderTool_MouseDown;
+            btnFinderTool.MouseUp += btnFinderTool_MouseUp;
             // 
             // splitContainer
             // 
@@ -131,9 +145,9 @@ namespace UnlockWorld
             lblElementDetails.AutoSize = true;
             lblElementDetails.Location = new Point(12, 5);
             lblElementDetails.Name = "lblElementDetails";
-            lblElementDetails.Size = new Size(84, 15);
+            lblElementDetails.Size = new Size(91, 15);
             lblElementDetails.TabIndex = 0;
-            lblElementDetails.Text = "元素详细信息:";
+            lblElementDetails.Text = "Element Details:";
             // 
             // logTextBox
             // 
@@ -151,9 +165,9 @@ namespace UnlockWorld
             lblLogs.AutoSize = true;
             lblLogs.Location = new Point(12, 5);
             lblLogs.Name = "lblLogs";
-            lblLogs.Size = new Size(58, 15);
+            lblLogs.Size = new Size(78, 15);
             lblLogs.TabIndex = 0;
-            lblLogs.Text = "操作日志:";
+            lblLogs.Text = "Activity Logs:";
             // 
             // statusStrip
             // 
@@ -167,19 +181,20 @@ namespace UnlockWorld
             // toolStripStatusLabel
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(57, 17);
-            toolStripStatusLabel.Text = "准备就绪";
+            toolStripStatusLabel.Size = new Size(39, 17);
+            toolStripStatusLabel.Text = "Ready";
             // 
-            // btnFinderTool
+            // button1
             // 
-            btnFinderTool.Location = new Point(12, 15);
-            btnFinderTool.Name = "btnFinderTool";
-            btnFinderTool.Size = new Size(125, 30);
-            btnFinderTool.TabIndex = 0;
-            btnFinderTool.Text = "查找控件 (拖动)";
-            btnFinderTool.UseVisualStyleBackColor = true;
+            button1.Enabled = false;
+            button1.Location = new Point(307, 23);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 4;
+            button1.Text = "Test";
+            button1.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -188,9 +203,9 @@ namespace UnlockWorld
             Controls.Add(panelTop);
             Controls.Add(statusStrip);
             MinimumSize = new Size(500, 400);
-            Name = "Form1";
+            Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "UnlockWorld - 控件解锁工具";
+            Text = "UnlockWorld - UI Element Unlocker";
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
             splitContainer.Panel1.ResumeLayout(false);
@@ -221,5 +236,6 @@ namespace UnlockWorld
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolTip toolTip;
         private Button btnFinderTool;
+        private Button button1;
     }
 }

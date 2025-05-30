@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Security.Principal;
 using System.Diagnostics;
@@ -18,42 +19,63 @@ static class Program
     [STAThread]
     static void Main()
     {
-        // 检查是否已经以管理员权限运行
+        // Check if running with administrator privileges
         if (!IsRunningAsAdministrator())
         {
-            // 如果不是管理员权限，尝试重新以管理员权限启动
+            // If not running as administrator, restart the application with admin rights
             RestartAsAdministrator();
             return;
         }
 
-        // 配置管理
+        // Configuration setup
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-        // Serilog集成
+        // Configure Serilog from config file
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+            .ReadFrom.Configuration(configuration)
             .CreateLogger();
 
-        // 依赖注入容器
-        var services = new ServiceCollection();
-        services.AddSingleton<IConfiguration>(configuration);
-        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
-        services.AddTransient<Form1>();
-        // 注册其他服务: services.AddTransient<IMyService, MyService>();
+        try
+        {
+            // Log application startup information
+            Log.Information("Application is starting");
+            Log.Information("Current working directory: {WorkingDirectory}", Environment.CurrentDirectory);
+            Log.Information("Application base directory: {BaseDirectory}", AppDomain.CurrentDomain.BaseDirectory);
 
-        var serviceProvider = services.BuildServiceProvider();
+            // Create startup class and configure services
+            var startup = new Startup(configuration);
+            var services = new ServiceCollection();
+            startup.ConfigureServices(services);
 
-        ApplicationConfiguration.Initialize();
-        // 通过DI获取Form1示例（如需注入服务可修改Form1构造函数）
-        Application.Run(serviceProvider.GetRequiredService<Form1>());
+            // Build service provider
+            var serviceProvider = services.BuildServiceProvider();
+
+            Log.Information("Initializing Windows application");
+            ApplicationConfiguration.Initialize();
+
+            // Get StartMain from DI container and run
+            Log.Information("Ready to launch main form");
+            Application.Run(serviceProvider.GetRequiredService<MainForm>());
+            Log.Information("Application exited normally");
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application startup failed");
+            MessageBox.Show($"An error occurred during application startup: {ex.Message}", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            Log.Information("Application shutting down");
+            Log.CloseAndFlush();
+        }
     }
 
     /// <summary>
-    /// 检查应用程序是否以管理员权限运行
+    /// Check if the application is running with administrator privileges
     /// </summary>
     private static bool IsRunningAsAdministrator()
     {
@@ -63,7 +85,7 @@ static class Program
     }
 
     /// <summary>
-    /// 重新以管理员权限启动应用程序
+    /// Restart the application with administrator privileges
     /// </summary>
     private static void RestartAsAdministrator()
     {
@@ -80,8 +102,8 @@ static class Program
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"无法以管理员权限启动应用程序。某些功能可能无法正常工作。\n\n错误: {ex.Message}",
-                "权限错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show($"Unable to restart application with administrator privileges. Some features may not work properly.\n\nError: {ex.Message}",
+                "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
